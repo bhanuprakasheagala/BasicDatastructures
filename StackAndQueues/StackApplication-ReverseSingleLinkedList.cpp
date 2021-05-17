@@ -6,7 +6,7 @@ struct Node{
   int data;
   struct Node *next;
 };
-struct Node* head = NULL;
+struct Node* head;
 
 struct Node* GetNewNode(int value){
   struct Node* newnode = (struct Node*)malloc(sizeof(struct Node));
@@ -14,16 +14,20 @@ struct Node* GetNewNode(int value){
   newnode->next = NULL;
   return newnode;
 }
-void insert(struct Node* head, int value){
+struct Node* insert(struct Node* head, int value){
   struct Node* newnode = GetNewNode(value);
   if(head == NULL){
     head = newnode;
-    return;
+    return head;
   }
-  newnode->next = head;
-  head = newnode;
+  struct Node* t = head;
+  while(t->next != NULL){
+    t = t->next;
+  }
+  t->next = newnode;
+  return head;
 }
-void Print(){
+void Print(struct Node* head){
   Node* temp = head;
   while(temp != NULL){
     printf("%d ", temp->data);
@@ -31,33 +35,37 @@ void Print(){
   }
   printf("\n");
 }
-void Reverse(){
-  if(head == NULL) return;
+struct Node* Reverse(){
+  if(head == NULL) return head;
   stack<struct Node*> S;
-  Node* temp = head;
-  while(temp != NULL){
+  struct Node* temp = head;
+  while(temp->next != NULL){
     S.push(temp);
     temp = temp->next;
   }
-  temp = S.top();
+  //temp = S.top();
   head = temp;
-  S.pop();
+  //S.pop();
   while(!S.empty()){
     temp->next = S.top();
     S.pop();
     temp = temp->next;
   }
   temp->next = NULL;
+  return head;
 }
 
 int main(){
-  insert(head, 1);
-  insert(head, 2);
-  insert(head, 3);
-  insert(head, 4);
-  insert(head, 5);
-  Print();
-  Reverse();
-  Print();
+  head = NULL;
+  head = insert(head, 1);
+  head = insert(head, 2);
+  head = insert(head, 3);
+  head = insert(head, 4);
+  head = insert(head, 5);
+  Print(head);
+  cout<<endl;
+  struct Node* res = Reverse();
+  Print(res);
+  cout<<endl;
   return 0;
 }
